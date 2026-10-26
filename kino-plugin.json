@@ -6,6 +6,6 @@
   "icon": "https://raw.githubusercontent.com/Rayoapp5/cineexp/main/imagen.png",
   "url": "https://www.enmcine.uk",
   "language": "es",
-  "type": "movie,series",
+  "type": ["movie", "series"],
   "main": "https://raw.githubusercontent.com/Rayoapp5/cineexp/main/enmcine.js"
 }
