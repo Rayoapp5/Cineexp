@@ -1,3 +1,4 @@
+
 // ==KinoPlugin==
 // @id           rayoapp5.enmcine
 // @name         ENMCINE
@@ -9,46 +10,47 @@
 // @type         movie
 // ==KinoPlugin==
 
-async function search(query) {
+// Función nativa que Kino TV llama al usar la barra de búsqueda
+async function onSearch(query) {
     const url = `https://enmcine.uk{encodeURIComponent(query)}`;
     const res = await fetch(url);
     const html = await res.text();
     const $ = cheerio.load(html);
-    const results = [];
+    const items = [];
     
     $('.item').each((i, el) => {
         const title = $(el).find('.title').text().trim();
         const link = $(el).find('a').attr('href');
         const image = $(el).find('img').attr('src');
-        results.push({ name: title, url: link, poster: image });
+        
+        // Formato de objeto estrictamente requerido por Kino TV
+        items.push({ 
+            id: link, // Kino usa la URL de la ficha como ID único local
+            title: title, 
+            poster: image,
+            type: 'movie'
+        });
     });
-    return results;
+    return items;
 }
 
-async function getLinks(url) {
-    const res = await fetch(url);
+// Función nativa que Kino TV llama al abrir los detalles de un título
+async function onGetMediaDetails(id) {
+    const res = await fetch(id); // 'id' contiene la URL del link de la ficha
     const html = await res.text();
     const $ = cheerio.load(html);
-    const links = [];
+    const streams = [];
     
     $('iframe').each((i, el) => {
-        links.push({ name: "Servidor 1", url: $(el).attr('src') });
+        streams.push({ 
+            name: "Servidor " + (i + 1), 
+            url: $(el).attr('src') 
+        });
     });
-    return links;
-}
-
-async function loadCatalog(type) {
-    const url = type === 'movie' ? 'https://enmcine.uk' : 'https://enmcine.uk';
-    const res = await fetch(url);
-    const html = await res.text();
-    const $ = cheerio.load(html);
-    const results = [];
     
-    $('.item').each((i, el) => {
-        const title = $(el).find('.title').text().trim();
-        const link = $(el).find('a').attr('href');
-        const image = $(el).find('img').attr('src');
-        results.push({ name: title, url: link, poster: image });
-    });
-    return results;
+    return {
+        id: id,
+        type: 'movie',
+        streams: streams
+    };
 }
