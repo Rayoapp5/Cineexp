@@ -1,10 +1,22 @@
 {
+  "id": "com.rayoapp5.enmcine",
+  "version": "1.0.0", 
   "name": "ENMCINE",
-  "author": "apprayo5",
-  "version": 1,
-  "icon": "https://raw.githubusercontent.com/apprayo5/cineexp/main/logo.png",
-  "url": "https://www.enmcine.uk",
-  "language": "es",
-  "type": "movie,series",
-  "main": "enmcine.js"
+  "description": "Addon de peliculas y series de ENMCINE",
+  "logo": "https://raw.githubusercontent.com/Rayoapp5/cineexp/main/imagen.png",
+  "resources": ["catalog", "meta", "stream"],
+  "types": ["movie", "series"],
+  "idPrefixes": ["tt"],
+  "catalogs": [
+    {
+      "type": "movie",
+      "id": "enmcine_movies",
+      "name": "Últimas Películas"
+    },
+    {
+      "type": "series",
+      "id": "enmcine_series", 
+      "name": "Últimas Series"
+    }
+  ]
 }
