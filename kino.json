@@ -1,7 +1,8 @@
 {
+  "id": "rayoapp5.enmcine",
   "name": "ENMCINE",
   "author": "Rayoapp5",
-  "version": 1,
+  "version": "1.0.0",
   "icon": "https://raw.githubusercontent.com/Rayoapp5/cineexp/main/imagen.png",
   "url": "https://www.enmcine.uk",
   "language": "es",
