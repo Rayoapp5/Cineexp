@@ -1,0 +1,16 @@
+{
+  "id": "net.enmcine.catalog",
+  "version": "1.0.1",
+  "name": "ENMCINE",
+  "description": "Películas y series de enmcine.uk",
+  "resources": ["catalog", "meta", "stream"],
+  "types": ["movie", "series"],
+  "idPrefixes": ["enm:"],
+  "catalogs": [
+    {"type": "movie","id": "enm_latest_movies","name": "Últimas Películas","extra": [{"name": "skip","isRequired": false}]},
+    {"type": "series","id": "enm_latest_series","name": "Últimas Series","extra": [{"name": "skip","isRequired": false}]},
+    {"type": "movie","id": "enm_search_movies","name": "Buscar Películas","extra": [{"name": "search","isRequired": true}]},
+    {"type": "series","id": "enm_search_series","name": "Buscar Series","extra": [{"name": "search","isRequired": true}]}
+  ],
+  "logo": "https://raw.githubusercontent.com/apprayo5/cineexp/main/logo.png",
+  "behaviorHints": {"configurable": false}
