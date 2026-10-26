@@ -1,66 +1,53 @@
-const BASE_URL = "https://www.enmcine.uk";
+// ==CloudStream==
+// name: ENMCINE
+// author: Rayoapp5
+// version: 1
+// description: Peliculas y Series de ENMCINE
+// icon: https://raw.githubusercontent.com/Rayoapp5/cineexp/main/imagen.png
+// language: es
+// type: movie,series
+// ==CloudStream==
 
-async function getCatalog(type, id, skip = 0) {
-    let url = BASE_URL;
-    if(id === "enm_latest_movies") url = `${BASE_URL}/peliculas/`;
-    if(id === "enm_latest_series") url = `${BASE_URL}/series/`;
-    
+async function search(query) {
+    const url = `https://www.enmcine.uk/?s=${encodeURIComponent(query)}`;
     const res = await fetch(url);
     const html = await res.text();
+    const $ = cheerio.load(html);
+    const results = [];
     
-    const items = [];
-    const regex = /<a href="#\/ver\/(.*?)\?titulo=(.*?)".*?<img src="(.*?)"/gs;
-    let match;
-    
-    while ((match = regex.exec(html)) !== null) {
-        items.push({
-            id: `enm:${decodeURIComponent(match[1])}`,
-            type: id.includes("series") ? "series" : "movie",
-            name: decodeURIComponent(match[2]).replace(/\+/g, "),
-            poster: match[3]
-        });
-    }
-    return { metas: items.slice(skip, skip + 20) };
+    $('.item').each((i, el) => {
+        const title = $(el).find('.title').text().trim();
+        const link = $(el).find('a').attr('href');
+        const image = $(el).find('img').attr('src');
+        results.push({ name: title, url: link, poster: image });
+    });
+    return results;
 }
 
-async function search(query, type, skip = 0) {
-    const url = `${BASE_URL}/?s=${encodeURIComponent(query)}`;
+async function getLinks(url) {
     const res = await fetch(url);
     const html = await res.text();
+    const $ = cheerio.load(html);
+    const links = [];
     
-    const items = [];
-    const regex = /<a href="#\/ver\/(.*?)\?titulo=(.*?)".*?<img src="(.*?)"/gs;
-    let match;
-    
-    while ((match = regex.exec(html)) !== null) {
-        items.push({
-            id: `enm:${decodeURIComponent(match[1])}`,
-            type: "movie",
-            name: decodeURIComponent(match[2]).replace(/\+/g, "),
-            poster: match[3]
-        });
-    }
-    return { metas: items.slice(skip, skip + 20) };
+    $('iframe').each((i, el) => {
+        links.push({ name: "Servidor 1", url: $(el).attr('src') });
+    });
+    return links;
 }
 
-async function getStream(id) {
-    const slug = id.replace("enm:", "");
-    const url = `${BASE_URL}/#/ver/${slug}`;
+async function loadCatalog(type) {
+    const url = type === 'movie' ? 'https://www.enmcine.uk/peliculas/' : 'https://www.enmcine.uk/series/';
     const res = await fetch(url);
     const html = await res.text();
+    const $ = cheerio.load(html);
+    const results = [];
     
-    const streams = [];
-    const iframeRegex = /<iframe[^>]*src="([^"]*)"/g;
-    let match;
-    
-    while ((match = iframeRegex.exec(html)) !== null) {
-        streams.push({
-            name: "ENMCINE",
-            title: "Servidor",
-            url: match[1]
-        });
-    }
-    return { streams };
+    $('.item').each((i, el) => {
+        const title = $(el).find('.title').text().trim();
+        const link = $(el).find('a').attr('href');
+        const image = $(el).find('img').attr('src');
+        results.push({ name: title, url: link, poster: image });
+    });
+    return results;
 }
-
-module.exports = { getCatalog, search, getStream };
