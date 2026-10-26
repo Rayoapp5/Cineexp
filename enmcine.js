@@ -5,7 +5,7 @@
 // description: Peliculas y Series de ENMCINE
 // icon: https://raw.githubusercontent.com/Rayoapp5/cineexp/main/imagen.png
 // language: es
-// type: movie,series
+// "type": ["movie", "series"],
 // ==CloudStream==
 
 async function search(query) {
